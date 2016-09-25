@@ -11,22 +11,26 @@ public class TextEditorDemo extends JFrame implements ActionListener {
 
 	private static final long serialVersionUID = 1L;
 	private RSyntaxTextArea textArea;
-
-	private static void printLines(String name, InputStream ins)
+	private JTextArea log;
+	
+	private  void printLines(String name, InputStream ins)
 			throws Exception {
 		String line = null;
 		BufferedReader in = new BufferedReader(new InputStreamReader(ins));
 		while ((line = in.readLine()) != null) {
+			log.append(name + " " + line + "\n");
 			System.out.println(name + " " + line);
 		}
 	}
 
-	private static void runProcess(String command) throws Exception {
+	private  void runProcess(String command) throws Exception {
 		Process pro = Runtime.getRuntime().exec(command);
 		printLines(command + " stdout:", pro.getInputStream());
 		printLines(command + " stderr:", pro.getErrorStream());
 		pro.waitFor();
+		log.append(command + " exitValue() " + pro.exitValue() + "\n");
 		System.out.println(command + " exitValue() " + pro.exitValue());
+		
 	}
 
 	public TextEditorDemo() {
@@ -34,17 +38,22 @@ public class TextEditorDemo extends JFrame implements ActionListener {
 		JFrame f = new JFrame("Text Area Examples");
 
 		JPanel cp = new JPanel(new BorderLayout());
+		JPanel cp1 = new JPanel(new BorderLayout());
 		JPanel cp2 = new JPanel(new BorderLayout());
 
 		f.getContentPane().add(cp, BorderLayout.PAGE_START);
+		f.getContentPane().add(cp1, BorderLayout.CENTER);
 		f.getContentPane().add(cp2, BorderLayout.PAGE_END);
 
-		textArea = new RSyntaxTextArea(20, 60);
+		textArea = new RSyntaxTextArea(30, 100);
 		textArea.setSyntaxEditingStyle(SyntaxConstants.SYNTAX_STYLE_JAVA);
 		textArea.setCodeFoldingEnabled(true);
 		RTextScrollPane sp = new RTextScrollPane(textArea);
 		cp.add(sp);
-
+		
+		log = new JTextArea(0, 0);
+		cp1.add(log);
+		
 		JButton b = new JButton("Run");
 		b.addActionListener(this);
 		cp2.add(b);
@@ -93,6 +102,7 @@ public class TextEditorDemo extends JFrame implements ActionListener {
 			e1.printStackTrace();
 		}
 		
+		log.setText("");
 		
 		try {
 			runProcess("javac Main.java");
