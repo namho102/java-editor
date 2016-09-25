@@ -1,6 +1,7 @@
 import java.awt.*;
 import java.awt.event.*;
 import java.io.*;
+
 import javax.swing.*;
 
 import org.fife.ui.rtextarea.*;
@@ -9,6 +10,7 @@ import org.fife.ui.rsyntaxtextarea.*;
 public class TextEditorDemo extends JFrame implements ActionListener {
 
 	private static final long serialVersionUID = 1L;
+	private RSyntaxTextArea textArea;
 
 	private static void printLines(String name, InputStream ins)
 			throws Exception {
@@ -37,7 +39,7 @@ public class TextEditorDemo extends JFrame implements ActionListener {
 		f.getContentPane().add(cp, BorderLayout.PAGE_START);
 		f.getContentPane().add(cp2, BorderLayout.PAGE_END);
 
-		RSyntaxTextArea textArea = new RSyntaxTextArea(20, 60);
+		textArea = new RSyntaxTextArea(20, 60);
 		textArea.setSyntaxEditingStyle(SyntaxConstants.SYNTAX_STYLE_JAVA);
 		textArea.setCodeFoldingEnabled(true);
 		RTextScrollPane sp = new RTextScrollPane(textArea);
@@ -77,8 +79,21 @@ public class TextEditorDemo extends JFrame implements ActionListener {
 	}
 
 	public void actionPerformed(ActionEvent e) {
-
+//		System.out.println(this.textArea.getText());
+		// save text to temp.java
 		System.out.println("clicked");
+		
+		BufferedWriter out;
+		try {
+			out = new BufferedWriter(new FileWriter("/home/foo/workspace/java-editor/Main.java"));
+			out.write(this.textArea.getText()); // write the contents of the TextArea to the file
+			out.close(); // close the file stream
+		} catch (IOException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		}
+		
+		
 		try {
 			runProcess("javac Main.java");
 			runProcess("java Main");
