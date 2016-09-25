@@ -6,10 +6,6 @@ import javax.swing.*;
 import org.fife.ui.rtextarea.*;
 import org.fife.ui.rsyntaxtextarea.*;
 
-/**
- * A simple example showing how to use RSyntaxTextArea to add Java syntax
- * highlighting to a Swing application.
- */
 public class TextEditorDemo extends JFrame implements ActionListener {
 
 	private static final long serialVersionUID = 1L;
